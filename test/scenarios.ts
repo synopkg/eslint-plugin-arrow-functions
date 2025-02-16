@@ -364,7 +364,7 @@ export const invalidAndHasBlockStatement = [
     output: 'const foo = async (a) => { console.log(3); };',
   },
 
-  // https://github.com/JamieMason/eslint-plugin-prefer-arrow-functions/issues/28
+  // https://github.com/synopkg/eslint-plugin-arrow-functions/issues/28
   {
     code: `export function foo() { const bar = '$'; return bar; }`,
     output: `export const foo = () => { const bar = '$'; return bar; };`,

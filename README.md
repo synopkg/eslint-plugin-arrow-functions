@@ -1,46 +1,73 @@
-# eslint-plugin-prefer-arrow
-ESLint plugin to prefer arrow functions. By default, the plugin allows usage of `function` as a member of an Object's prototype, but this can be changed with the property `disallowPrototype`. Functions referencing `this` will also be allowed. Alternatively, with the `singleReturnOnly` option, this plugin only reports functions where converting to an arrow function would dramatically simplify the code.
+# eslint-plugin-arrow-functions
 
-Class methods will not produce errors unless the `classPropertiesAllowed` flag is set.
+> An ESLint Plugin to Lint and auto-fix plain Functions into Arrow Functions, in all cases where conversion would result in the same behaviour (Arrow Functions do not support `this`, `arguments`, or `new.target` for example).
 
-This plugin will automatically fix your code using ESLint's `--fix` option, as long as you use the `singleReturnOnly` option.
+## Installation
 
-# Installation
-
-Install the npm package
 ```bash
-# If eslint is installed globally
-npm install -g eslint-plugin-prefer-arrow
-
-# If eslint is installed locally
-npm install -D eslint-plugin-prefer-arrow
+npm install --save-dev eslint eslint-plugin-arrow-functions
 ```
 
-Add the plugin to the `plugins` section and the rule to the `rules` section in your .eslintrc
-```js
-"plugins": [
-  "prefer-arrow"
-],
-"rules": {
-  "prefer-arrow/prefer-arrow-functions": [
-    "warn",
-    {
-      "disallowPrototype": true,
-      "singleReturnOnly": false,
-      "classPropertiesAllowed": false
-    }
-  ]
+## Configuration
+
+Add the plugin to the `plugins` section and the rule to the `rules` section in your .eslintrc. The default values for options are listed in this example.
+
+```json
+{
+  "plugins": ["prefer-arrow-functions"],
+  "rules": {
+    "prefer-arrow-functions/prefer-arrow-functions": [
+      "warn",
+      {
+        "allowedNames": [],
+        "allowNamedFunctions": false,
+        "allowObjectProperties": false,
+        "classPropertiesAllowed": false,
+        "disallowPrototype": false,
+        "returnStyle": "unchanged",
+        "singleReturnOnly": false
+      }
+    ]
+  }
 }
 ```
-# Configuration
- * `disallowPrototype`: If set to true, the plugin will warn if `function` is used anytime. Otherwise, the plugin allows usage of `function` if it is a member of an Object's prototype.
- * `singleReturnOnly`: If set to true, the plugin will only warn for `function` declarations which *only* contain a return statement. These often look much better when declared as arrow functions without braces. Works well in conjunction with ESLint's built-in [arrow-body-style](http://eslint.org/docs/rules/arrow-body-style) set to `as-needed`.
- * `classPropertiesAllowed`: If set to true, the plugin will warn about functions which could be replaced with arrow functions defined as [class instance fields](https://github.com/jeffmo/es-class-static-properties-and-fields). Enable if you're using Babel's [transform-class-properties](https://babeljs.io/docs/plugins/transform-class-properties/) plugin.
- * `allowStandaloneDeclarations`: If set to true, the plugin will ignore top-level function declarations (the plugin will still warn about "inner" functions, for example, function declarations inside other functions).
 
-# Autofixing
+## Options
 
-To autofix your code, simply run ESLint with the `--fix` option. Note that this only works when the `singleReturnOnly` option is set to true.
-```bash
-eslint --fix src
+### `allowedNames`
+
+An optional array of function names to ignore. When set, the rule won't report named functions such as `function foo() {}` whose name is identical to a member of this array.
+
+### `allowNamedFunctions`
+
+If set to true, the rule won't report named functions such as `function foo() {}`. Anonymous function such as `const foo = function() {}` will still be reported.
+
+### `allowObjectProperties`
+
+If set to true, the rule won't report named methods such as
+
+```js
+const myObj = {
+  hello() {}
+}
 ```
+
+### `classPropertiesAllowed`
+
+When `true`, functions defined as [class instance fields](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Field_declarations) will be converted to arrow functions when doing so would not alter or break their behaviour.
+
+### `disallowPrototype`
+
+When `true`, functions assigned to a `prototype` will be converted to arrow functions when doing so would not alter or break their behaviour.
+
+### `returnStyle`
+
+-   When `"implicit"`, arrow functions such as `x => { return x; }` will be converted to `x => x`.
+-   When `"explicit"`, arrow functions such as `x => x` will be converted to `x => { return x; }`.
+-   When `"unchanged"` or not set, arrow functions will be left as they were.
+
+### `singleReturnOnly`
+
+When `true`, only `function` declarations which _only_ contain a return statement will be converted. Functions containing block statements will be ignored.
+
+> This option works well in conjunction with ESLint's built-in [arrow-body-style](http://eslint.org/docs/rules/arrow-body-style) set to `as-needed`.
