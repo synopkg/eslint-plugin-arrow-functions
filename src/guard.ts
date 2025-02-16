@@ -191,4 +191,28 @@ export class Guard {
     if (this.hasNameAndIsExportedAsDefaultExport(fn)) return false;
     return true;
   }
+
+  handleEdgeCases(fn: AnyFunction): boolean {
+    if (this.options.handleEdgeCases) {
+      if (this.containsThis(fn) || this.containsArguments(fn) || this.containsNewDotTarget(fn)) {
+        return false;
+      }
+      if (this.isOverloadedFunction(fn) || this.isAssertionFunction(fn)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  betterAutoFix(fn: AnyFunction): boolean {
+    if (this.options.betterAutoFix) {
+      if (this.isBlockStatementWithSingleReturn(fn.body)) {
+        return true;
+      }
+      if (this.hasImplicitReturn(fn.body)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
