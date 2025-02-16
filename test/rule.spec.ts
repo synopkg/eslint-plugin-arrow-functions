@@ -513,3 +513,49 @@ describe('when file is TSX', () => {
     });
   });
 });
+
+describe('when handleEdgeCases is true', () => {
+  describe('when function has complex return statements or uses this, arguments, or new.target', () => {
+    describe('it considers the function valid', () => {
+      ruleTester.run('prefer-arrow-functions', rule, {
+        valid: [
+          {
+            code: 'function foo() { return this.bar; }',
+          },
+          {
+            code: 'function foo() { return arguments; }',
+          },
+          {
+            code: 'function foo() { return new.target; }',
+          },
+          {
+            code: 'function foo() { return a && (3 + a()) ? true : 99; }',
+          },
+        ].map(withOptions({ handleEdgeCases: true })),
+        invalid: [],
+      });
+    });
+  });
+});
+
+describe('when betterAutoFix is true', () => {
+  describe('when function can be converted to an arrow function with better auto-fix suggestions', () => {
+    describe('it fixes the function with better auto-fix suggestions', () => {
+      ruleTester.run('prefer-arrow-functions', rule, {
+        valid: [],
+        invalid: [
+          {
+            code: 'function foo() { return 3; }',
+            output: 'const foo = () => 3;',
+          },
+          {
+            code: 'function foo(a) { return a && (3 + a()) ? true : 99; }',
+            output: 'const foo = (a) => a && (3 + a()) ? true : 99;',
+          },
+        ]
+          .map(withOptions({ betterAutoFix: true }))
+          .map(withErrors(['USE_ARROW_WHEN_FUNCTION'])),
+      });
+    });
+  });
+});
