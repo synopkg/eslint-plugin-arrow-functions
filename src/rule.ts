@@ -51,6 +51,14 @@ export const preferArrowFunctions = createRule<Options, MessageId>({
             default: DEFAULT_OPTIONS.singleReturnOnly,
             type: 'boolean',
           },
+          handleEdgeCases: {
+            default: DEFAULT_OPTIONS.handleEdgeCases,
+            type: 'boolean',
+          },
+          betterAutoFix: {
+            default: DEFAULT_OPTIONS.betterAutoFix,
+            type: 'boolean',
+          },
         },
         type: 'object',
       },

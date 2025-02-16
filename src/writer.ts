@@ -75,4 +75,18 @@ export class Writer {
       returnType: this.getReturnType(node),
     };
   }
+
+  handleEdgeCases(node: AnyFunction): string {
+    if (this.guard.handleEdgeCases(node)) {
+      return this.writeArrowFunction(node);
+    }
+    return this.sourceCode.getText(node);
+  }
+
+  betterAutoFix(node: AnyFunction): string {
+    if (this.guard.betterAutoFix(node)) {
+      return this.writeArrowFunction(node);
+    }
+    return this.sourceCode.getText(node);
+  }
 }
