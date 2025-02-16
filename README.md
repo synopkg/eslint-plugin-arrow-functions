@@ -71,3 +71,20 @@ When `true`, functions assigned to a `prototype` will be converted to arrow func
 When `true`, only `function` declarations which _only_ contain a return statement will be converted. Functions containing block statements will be ignored.
 
 > This option works well in conjunction with ESLint's built-in [arrow-body-style](http://eslint.org/docs/rules/arrow-body-style) set to `as-needed`.
+
+### `handleEdgeCases`
+
+When `true`, the rule will handle additional edge cases such as functions with complex return statements or functions that use `this`, `arguments`, or `new.target`.
+
+### `betterAutoFix`
+
+When `true`, the rule will provide better auto-fix suggestions for functions that can be converted to arrow functions.
+
+## Edge Cases
+
+The `prefer-arrow-functions` rule has been improved to handle the following edge cases:
+
+- Functions with complex return statements
+- Functions that use `this`, `arguments`, or `new.target`
+- Functions with type parameters in TypeScript
+- Functions with overloaded signatures in TypeScript
